@@ -56,12 +56,21 @@ def main_win32():
 def pkgconfig(*packages, **kw):
     """Based on http://code.activestate.com/recipes/502261-python-distutils-pkg-config/"""
     
-    import commands
+    import subprocess
     
-    flag_map = {'-I': 'include_dirs', '-L': 'library_dirs', '-l': 'libraries'}
-    for token in commands.getoutput("pkg-config --libs --cflags %s" % ' '.join(packages)).split():
-        kw.setdefault(flag_map.get(token[:2]), []).append(token[2:])
-        
+    flag_map = {'-I': 'include_dirs', '-L': 'library_dirs', '-l': 'libraries', '-D': 'define_macros'}
+    command = ("pkg-config", "--libs", "--cflags") + packages
+    output = subprocess.check_output(command, universal_newlines=True)
+    for token in output.split():
+        flag = token[:2]
+        value = token[2:]
+        if flag == '-D':
+            if '=' in value:
+                value = value.split('=', 1)
+            else:
+                value = (value, None)
+        kw.setdefault(flag_map.get(flag), []).append(value)
+
     kw['include_dirs'] += [np.get_include()]
         
     return kw
