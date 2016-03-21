@@ -7,6 +7,7 @@ Author: Amit Aides <amitibo@tx.technion.ac.il>
 URL: <http://http://code.google.com/p/cyipopt/>
 License: EPL 1.0
 """
+cimport cpython.version
 import numpy as np
 cimport numpy as np
 from ipopt cimport *
@@ -227,7 +228,10 @@ cdef class problem:
             cu=None
             ):
 
-        assert(n in (types.IntType, types.LongType) and n > 0, 'n must be a positive integer.')
+        if cpython.version.PY_MAJOR_VERSION >= 3:
+            assert(isinstance (n, int) and n > 0, 'n must be a positive integer.')
+        else:
+            assert(isinstance(n, (int, long)) and n > 0, 'n must be a positive integer.')
         
         if problem_obj is None:
             log('problem_obj is not defined, using self', logging.INFO)
@@ -250,7 +254,10 @@ cdef class problem:
         #
         # Handle the constraints
         #
-        assert(m in (types.IntType, types.LongType) and m >= 0, 'm must be zero or a positive integer.')
+        if cpython.version.PY_MAJOR_VERSION >= 3:
+            assert(isinstance(m, int) and m >= 0, 'm must be zero or a positive integer.')
+        else:
+            assert(isinstance(m, (int, long)) and m >= 0, 'm must be zero or a positive integer.')
             
         if m < 1:
             m = 0
@@ -332,6 +339,9 @@ cdef class problem:
                             repr(nele_hess)
                             )
 
+        if cpython.version.PY_MAJOR_VERSION >= 3:
+            creation_msg = creation_msg.encode()
+
         log(creation_msg, logging.DEBUG)
 
         # TODO: verify that the numpy arrays use C order
@@ -406,7 +416,8 @@ cdef class problem:
             None
         """
         
-        if type(val) == str:
+        if type(val) == str or \
+                cpython.version.PY_MAJOR_VERSION >= 3 and type(val) == bytes:
             ret_val = AddIpoptStrOption(self.__nlp, keyword, val)
         elif type(val) == float:
             ret_val = AddIpoptNumOption(self.__nlp, keyword, val)
