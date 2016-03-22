@@ -198,7 +198,7 @@ latex_documents = [
 
 # Additional stuff for the LaTeX preamble.
 latex_preamble = """
-\usepackage{amsmath}\usepackage{amsfonts}\usepackage{bm}\usepackage{morefloats}
+\\usepackage{amsmath}\\usepackage{amsfonts}\\usepackage{bm}\\usepackage{morefloats}
 """
 
 # If true, show page references after internal links.
@@ -233,8 +233,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'cyipopt', u'cyipopt Documentation',
-   u'Amit Aides', 'cyipopt', 'One line description of project.',
+  ('index', 'cyipopt', 'cyipopt Documentation',
+   'Amit Aides', 'cyipopt', 'One line description of project.',
    'Miscellaneous'),
 ]
 

@@ -35,5 +35,5 @@ open-source license.
 #
 # License: EPL.
 
-from cyipopt import *
+from .cyipopt import *
 
